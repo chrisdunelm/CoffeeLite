@@ -60,25 +60,29 @@ namespace CoffeeSyntax {
 				var ss = span.Snapshot;
 				var cc = ss == this.currentChar.Value.Snapshot ?
 					this.currentChar.Value : this.currentChar.Value.TranslateTo(ss, PointTrackingMode.Positive);
-				char cNext = cc.GetChar();
-				var ccPrev = cc.Position>0?(cc-1):cc;
-				char cPrev = ccPrev.GetChar();
-				var brace1 = braces.FirstOrDefault(x => x.Item1 == cNext);
-				if (brace1 != null) {
-					var match = this.FindMatchForwards(ss, brace1.Item1, brace1.Item2, cc.Position);
-					if (match != null) {
-						var tag = new TextMarkerTag("blue");
-						yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(cc, 1), tag);
-						yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ss, match.Value, 1), tag);
+				if (!this.overview.MultiLines.Any(x => x.GetSpan(ss).Contains(cc))) {
+					char cNext = cc.GetChar();
+					var brace1 = braces.FirstOrDefault(x => x.Item1 == cNext);
+					if (brace1 != null) {
+						var match = this.FindMatchForwards(ss, brace1.Item1, brace1.Item2, cc.Position);
+						if (match != null) {
+							var tag = new TextMarkerTag("blue");
+							yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(cc, 1), tag);
+							yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ss, match.Value, 1), tag);
+						}
 					}
 				}
-				var brace2 = braces.FirstOrDefault(x => x.Item2 == cPrev);
-				if (brace2 != null) {
-					var match = this.FindMatchBackwards(ss, brace2.Item2, brace2.Item1, Math.Max(0, cc.Position - 1));
-					if (match != null) {
-						var tag = new TextMarkerTag("blue");
-						yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ccPrev, 1), tag);
-						yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ss, match.Value, 1), tag);
+				var ccPrev = cc.Position > 0 ? (cc - 1) : cc;
+				if (!this.overview.MultiLines.Any(x => x.GetSpan(ss).Contains(ccPrev))) {
+					char cPrev = ccPrev.GetChar();
+					var brace2 = braces.FirstOrDefault(x => x.Item2 == cPrev);
+					if (brace2 != null) {
+						var match = this.FindMatchBackwards(ss, brace2.Item2, brace2.Item1, Math.Max(0, cc.Position - 1));
+						if (match != null) {
+							var tag = new TextMarkerTag("blue");
+							yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ccPrev, 1), tag);
+							yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(ss, match.Value, 1), tag);
+						}
 					}
 				}
 			}
