@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSyntax", "CoffeeSyntax\CoffeeSyntax.csproj", "{B03E0173-346A-43B8-8E36-3630DF9C904B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeParser", "CoffeeParser\CoffeeParser.csproj", "{A0BF6E7E-76FA-4315-A9A2-0F8FDD48D0EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeParserTest", "CoffeeParserTest\CoffeeParserTest.csproj", "{BBF8E343-B34C-4227-A65D-CCA4CDCEAA1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeLite", "CoffeeLite\CoffeeLite.csproj", "{B03E0173-346A-43B8-8E36-3630DF9C904B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,16 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|x86.ActiveCfg = Release|Any CPU
 		{A0BF6E7E-76FA-4315-A9A2-0F8FDD48D0EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0BF6E7E-76FA-4315-A9A2-0F8FDD48D0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0BF6E7E-76FA-4315-A9A2-0F8FDD48D0EB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -47,6 +37,16 @@ Global
 		{BBF8E343-B34C-4227-A65D-CCA4CDCEAA1E}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BBF8E343-B34C-4227-A65D-CCA4CDCEAA1E}.Release|x86.ActiveCfg = Release|x86
 		{BBF8E343-B34C-4227-A65D-CCA4CDCEAA1E}.Release|x86.Build.0 = Release|x86
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B03E0173-346A-43B8-8E36-3630DF9C904B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

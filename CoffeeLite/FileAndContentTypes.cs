@@ -13,12 +13,12 @@ namespace CoffeeSyntax {
 		[Export]
 		[Name("coffee")]
 		[BaseDefinition("text")]
-		internal static ContentTypeDefinition coffeeContentTypeDefinition;
+		internal static ContentTypeDefinition coffeeContentTypeDefinition = null;
 
 		[Export]
 		[FileExtension(".coffee")]
 		[ContentType("coffee")]
-		internal static FileExtensionToContentTypeDefinition coffeeFileExtensionDefinition;
+		internal static FileExtensionToContentTypeDefinition coffeeFileExtensionDefinition = null;
 
 	}
 
