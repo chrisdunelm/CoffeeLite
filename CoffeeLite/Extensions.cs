@@ -22,9 +22,24 @@ namespace CoffeeSyntax {
 			return @default;
 		}
 
-		//public static IEnumerable<T> Distinct<T, TDistinct>(this IEnumerable<T> en, Func<T, TDistinct> selector) {
+		public static bool In<T>(this T item, params T[] isIn) {
+			return isIn.Contains(item);
+		}
 
-		//}
+		public static IEnumerable<T> Distinct<T, TCompare>(this IEnumerable<T> en, Func<T, TCompare> selector, Func<T, T, T> result) {
+			var seen = new Dictionary<TCompare, T>();
+			foreach (T item in en) {
+				var compare = selector(item);
+				T already;
+				if (seen.TryGetValue(compare, out already)) {
+					var r = result(already, item);
+					seen[compare] = r;
+				} else {
+					seen.Add(compare, item);
+				}
+			}
+			return seen.Values;
+		}
 
 	}
 }

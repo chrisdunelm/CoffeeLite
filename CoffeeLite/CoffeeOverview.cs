@@ -90,20 +90,31 @@ namespace CoffeeSyntax {
 			var text = ss.GetText();
 			MlInfo curMultiline = null;
 			int startPos = -1;
+			bool inComment = false;
 			for (int i = 0, n = text.Length; i < n; i++) {
-				if (curMultiline == null) {
-					curMultiline = multiLinesDelimiters.FirstOrDefault(x => text.IsAt(i, x.Item1));
-					if (curMultiline != null) {
-						startPos = i;
-						i += curMultiline.Item1.Length - 1 + curMultiline.Item2.Length - 1;
+				if (inComment) {
+					if (text[i].In('\r', '\n')) {
+						inComment = false;
 					}
 				} else {
-					if (curMultiline.Item4 != null && text.IsAt(i, curMultiline.Item4)) {
-						// Do nothing
-					} else if (text.IsAt(i - (curMultiline.Item2.Length - 1), curMultiline.Item2)) {
-						var trackingSpan = ss.CreateTrackingSpan(startPos, i - startPos + 1, SpanTrackingMode.EdgeExclusive);
-						spans.Add(new MultiLine(trackingSpan, curMultiline.Item3));
-						curMultiline = null;
+					if (curMultiline == null) {
+						if (text[i] == '#') {
+							inComment = true;
+						} else {
+							curMultiline = multiLinesDelimiters.FirstOrDefault(x => text.IsAt(i, x.Item1));
+							if (curMultiline != null) {
+								startPos = i;
+								i += curMultiline.Item1.Length - 1 + curMultiline.Item2.Length - 1;
+							}
+						}
+					} else {
+						if (curMultiline.Item4 != null && text.IsAt(i, curMultiline.Item4)) {
+							i += curMultiline.Item4.Length - 1;
+						} else if (text.IsAt(i - (curMultiline.Item2.Length - 1), curMultiline.Item2)) {
+							var trackingSpan = ss.CreateTrackingSpan(startPos, i - startPos + 1, SpanTrackingMode.EdgeExclusive);
+							spans.Add(new MultiLine(trackingSpan, curMultiline.Item3));
+							curMultiline = null;
+						}
 					}
 				}
 			}

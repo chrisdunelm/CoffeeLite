@@ -10,6 +10,7 @@ namespace CoffeeParser {
 		NumericLiteral,
 		Keyword,
 		Identifier,
+		Comment,
 
 	}
 }

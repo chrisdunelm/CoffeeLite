@@ -40,29 +40,45 @@ namespace CoffeeSyntax {
 
 		public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
+		private IEnumerable<SnapshotSpan> Split(SnapshotSpan span, IEnumerable<SnapshotSpan> remove) {
+			var removeNorm = new NormalizedSnapshotSpanCollection(remove);
+			foreach (var r in removeNorm.OrderBy(x => x.Start.Position)) {
+				if (r.Start < span.End) {
+					if (r.Start > span.Start) {
+						yield return new SnapshotSpan(span.Start, r.Start);
+					}
+					if (r.End < span.End) {
+						span = new SnapshotSpan(r.End, span.End);
+					} else {
+						yield break;
+					}
+				}
+			}
+			yield return span;
+		}
+
 		public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
 			this.latestSnapshot = span.Snapshot;
 			var ss = span.Snapshot;
-			var mlOverlaps = this.overview.MultiLines.Where(x => x.GetSpan(ss).OverlapsWith(span)).ToArray();
-			if (mlOverlaps.Any()) {
-				var c =
-					from s in mlOverlaps
-					let cls = this.MapMultiline(s.Type)
-					where cls != null
-					select new ClassificationSpan(s.GetSpan(ss), cls);
-				return c.ToArray();
-			} else {
-				var line = ss.GetLineFromPosition(span.Start.Position);
-				var lineText = line.GetText();
-				var tokens = Parser.Parse(lineText);
-				var c =
-					from token in tokens
-					let cls = this.MapToken(token.Token)
-					where cls != null
-					let s = new SnapshotSpan(ss, line.Start.Position + token.Start, token.Length)
-					select new ClassificationSpan(s, cls);
-				return c.ToArray();
-			}
+			var line = ss.GetLineFromPosition(span.Start.Position);
+			var mlOverlaps = this.overview.MultiLines.Where(x => x.GetSpan(ss).OverlapsWith(line.Extent)).ToArray();
+			var withoutMls = Split(line.Extent, mlOverlaps.Select(x => x.GetSpan(ss)));
+			var query =
+				from part in withoutMls
+				let text = part.GetText()
+				let tokens = Parser.Parse(text)
+				from token in tokens
+				let cls = this.MapToken(token.Token)
+				where cls != null
+				let s = new SnapshotSpan(ss, part.Start.Position + token.Start, token.Length)
+				select new ClassificationSpan(s, cls);
+			var queryMl =
+				from part in mlOverlaps
+				let cls = this.MapMultiline(part.Type)
+				where cls != null
+				select new ClassificationSpan(part.GetSpan(ss), cls);
+			var ret = query.Concat(queryMl).ToArray();
+			return ret;
 		}
 
 		private IClassificationType MapMultiline(CoffeeOverview.MultiLineType type) {
@@ -89,6 +105,8 @@ namespace CoffeeSyntax {
 				return this.clsCoffeeNumericLiteral;
 			case Token.StringLiteral:
 				return this.clsCoffeeString;
+			case Token.Comment:
+				return this.clsCoffeeComment;
 			default:
 				return null;
 			}

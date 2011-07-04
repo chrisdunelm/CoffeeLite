@@ -43,11 +43,24 @@ namespace CoffeeSyntax {
 			}
 		}
 
-		private Tuple<char, char>[] braces = {
-												 Tuple.Create('(', ')'),
-												 Tuple.Create('{', '}'),
-												 Tuple.Create('[', ']'),
-											 };
+		private Tuple<char, char>[] braces =
+		{
+			Tuple.Create('(', ')'),
+			Tuple.Create('{', '}'),
+			Tuple.Create('[', ']'),
+		};
+
+		private bool ShouldTag(SnapshotPoint pt) {
+			var ss = pt.Snapshot;
+			if (this.overview.MultiLines.Any(x => x.GetSpan(ss).Contains(pt))) {
+				return false;
+			}
+			var line = pt.GetContainingLine();
+			var tokens = Parser.Parse(line.GetText());
+			return !tokens.Any(x =>
+				x.Token.In(Token.Comment) &&
+				pt.Position >= line.Start.Position + x.Start && pt.Position < line.Start.Position + x.Start + x.Length);
+		}
 
 		public IEnumerable<ITagSpan<TextMarkerTag>> GetTags(NormalizedSnapshotSpanCollection spans) {
 			if (spans.Count == 0) {
@@ -60,7 +73,7 @@ namespace CoffeeSyntax {
 				var ss = span.Snapshot;
 				var cc = ss == this.currentChar.Value.Snapshot ?
 					this.currentChar.Value : this.currentChar.Value.TranslateTo(ss, PointTrackingMode.Positive);
-				if (!this.overview.MultiLines.Any(x => x.GetSpan(ss).Contains(cc))) {
+				if (this.ShouldTag(cc)) {
 					char cNext = cc.GetChar();
 					var brace1 = braces.FirstOrDefault(x => x.Item1 == cNext);
 					if (brace1 != null) {
@@ -73,7 +86,7 @@ namespace CoffeeSyntax {
 					}
 				}
 				var ccPrev = cc.Position > 0 ? (cc - 1) : cc;
-				if (!this.overview.MultiLines.Any(x => x.GetSpan(ss).Contains(ccPrev))) {
+				if (this.ShouldTag(ccPrev)) {
 					char cPrev = ccPrev.GetChar();
 					var brace2 = braces.FirstOrDefault(x => x.Item2 == cPrev);
 					if (brace2 != null) {
@@ -101,10 +114,10 @@ namespace CoffeeSyntax {
 			for (; ; ) {
 				var infos = Parser.Parse(lineText);
 				var ignores = infos
-					.Where(x => x.Token == Token.StringLiteral)
+					.Where(x => x.Token.In(Token.StringLiteral, Token.Comment))
 					.Select(x => new { Position = x.Start + line.Start.Position, x.Length })
 					.Concat(mlsByPosition)
-					.Distinct()
+					.Distinct(x => x.Position, (a, b) => a.Length > b.Length ? a : b)
 					.ToDictionary(x => x.Position, x => x.Length);
 				while (lineOfs < lineText.Length) {
 					int skipLength = ignores.ValueOrDefault(foundPos);
@@ -161,7 +174,7 @@ namespace CoffeeSyntax {
 					.Where(x => x.Token == Token.StringLiteral)
 					.Select(x => new { Position = x.Start + line.Start.Position, x.Length })
 					.Concat(mlsByPosition)
-					.Distinct()
+					.Distinct(x => x.Position, (a, b) => a.Length > b.Length ? a : b)
 					.ToDictionary(x => x.Position + x.Length - 1, x => x.Length);
 				while (lineOfs >= 0) {
 					int skipLength = ignores.ValueOrDefault(foundPos);
