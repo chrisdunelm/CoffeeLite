@@ -20,4 +20,4 @@ _Or:_
 Get the source, open the solution in Visual Studio, build it. This generates the required
 _.vsix_ file.
 
-This extension can be managed using the "Tools/Add-in manager" menu option.
+This extension can be managed using the _"Tools/Extension manager"_ menu option.
