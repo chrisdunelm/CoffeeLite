@@ -12,6 +12,7 @@ namespace CoffeeSyntax {
 		public const string CoffeeKeyword = "coffee.keyword";
 		public const string CoffeeNumericLiteral = "coffee.numericliteral";
 		public const string CoffeeComment = "coffee.comment";
+        public const string CoffeeThis = "coffee.this";
 
 	}
 }

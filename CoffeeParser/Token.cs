@@ -6,11 +6,14 @@ using System.Text;
 namespace CoffeeParser {
 	public enum Token {
 
+        None = 0,
+
 		StringLiteral,
 		NumericLiteral,
 		Keyword,
 		Identifier,
 		Comment,
+        This,
 
 	}
 }

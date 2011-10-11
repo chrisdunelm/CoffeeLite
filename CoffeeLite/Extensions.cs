@@ -6,8 +6,17 @@ using System.Text;
 namespace CoffeeSyntax {
 	static class Extensions {
 
-		public static bool IsAt(this string s, int ofs, string isAt) {
-			return s.Skip(ofs).Take(isAt.Length).SequenceEqual(isAt);
+		public static bool IsAt(this string s, int ofs, string isAtOfs) {
+            int n = s.Length;
+            for (int i = 0; i < isAtOfs.Length; i++, ofs++) {
+                if (ofs < 0 || ofs >= n) {
+                    return false;
+                }
+                if (s[ofs] != isAtOfs[i]) {
+                    return false;
+                }
+            }
+            return true;
 		}
 
 		public static TResult NullThru<T, TResult>(this T o, Func<T, TResult> fn, TResult @default = default(TResult)) {

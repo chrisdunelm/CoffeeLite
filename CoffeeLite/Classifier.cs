@@ -17,6 +17,7 @@ namespace CoffeeSyntax {
 			this.clsCoffeeKeyword = classificationRegistry.GetClassificationType(VisualFormatNames.CoffeeKeyword);
 			this.clsCoffeeNumericLiteral = classificationRegistry.GetClassificationType(VisualFormatNames.CoffeeNumericLiteral);
 			this.clsCoffeeComment = classificationRegistry.GetClassificationType(VisualFormatNames.CoffeeComment);
+            this.clsThis = classificationRegistry.GetClassificationType(VisualFormatNames.CoffeeThis);
 			overview.MultiLinesChanged += (o, e) => {
 				if (this.latestSnapshot != null && this.ClassificationChanged != null) {
 					var spans = new NormalizedSnapshotSpanCollection(
@@ -36,6 +37,7 @@ namespace CoffeeSyntax {
 		private IClassificationType clsCoffeeKeyword;
 		private IClassificationType clsCoffeeNumericLiteral;
 		private IClassificationType clsCoffeeComment;
+        private IClassificationType clsThis;
 		private ITextSnapshot latestSnapshot = null;
 
 		public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
@@ -107,6 +109,8 @@ namespace CoffeeSyntax {
 				return this.clsCoffeeString;
 			case Token.Comment:
 				return this.clsCoffeeComment;
+            case Token.This:
+                return this.clsThis;
 			default:
 				return null;
 			}

@@ -70,5 +70,17 @@ namespace CoffeeSyntax {
 			}
 		}
 
-	}
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = VisualFormatNames.CoffeeThis)]
+        [Name(VisualFormatNames.CoffeeThis)]
+        [UserVisible(true)]
+        [DisplayName("Coffee this")]
+        [Order(Before = Priority.Default)]
+        sealed class CommentThis : ClassificationFormatDefinition {
+            public CommentThis() {
+                this.ForegroundColor = Colors.Orange;
+            }
+        }
+
+    }
 }

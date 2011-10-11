@@ -38,5 +38,10 @@ namespace CoffeeSyntax {
 		[BaseDefinition(VisualFormatNames.Coffee)]
 		internal static ClassificationTypeDefinition CommentClassificationDefinition = null;
 
-	}
+        [Export]
+        [Name(VisualFormatNames.CoffeeThis)]
+        [BaseDefinition(VisualFormatNames.Coffee)]
+        internal static ClassificationTypeDefinition ThisClassificationDefinition = null;
+
+    }
 }

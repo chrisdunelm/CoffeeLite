@@ -57,7 +57,7 @@ namespace CoffeeSyntax {
 		private static MlInfo[] multiLinesDelimiters =
 		{
 			Tuple.Create("###", "###", MultiLineType.Comment, (string)null),
-			Tuple.Create("/*", "*/", MultiLineType.Comment, (string)null),
+			//Tuple.Create("/*", "*/", MultiLineType.Comment, (string)null),
 			Tuple.Create("`", "`", MultiLineType.Backtick, (string)null),
 			Tuple.Create("'", "'", MultiLineType.StringSingle, "\\'"),
 			Tuple.Create("\"", "\"", MultiLineType.StringDouble, "\\\""),
@@ -90,16 +90,16 @@ namespace CoffeeSyntax {
 			var text = ss.GetText();
 			MlInfo curMultiline = null;
 			int startPos = -1;
-			bool inComment = false;
+			bool inSingleLineComment = false;
 			for (int i = 0, n = text.Length; i < n; i++) {
-				if (inComment) {
+				if (inSingleLineComment) {
 					if (text[i].In('\r', '\n')) {
-						inComment = false;
+						inSingleLineComment = false;
 					}
 				} else {
 					if (curMultiline == null) {
-						if (text[i] == '#') {
-							inComment = true;
+                        if (text[i] == '#' && !text.IsAt(i, "###") && !text.IsAt(i - 1, "###") && !text.IsAt(i - 1, "###")) {
+							inSingleLineComment = true;
 						} else {
 							curMultiline = multiLinesDelimiters.FirstOrDefault(x => text.IsAt(i, x.Item1));
 							if (curMultiline != null) {
